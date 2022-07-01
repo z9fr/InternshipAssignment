@@ -1,0 +1,18 @@
+{
+  "name": "internship-assignment",
+  "version": "1.0.0",
+  "description": " Internship Assignment",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "lerna run --parallel dev"
+  },
+  "devDependencies": {
+    "lerna": "^5.1.6",
+    "typescript": "^4.7.4"
+  }
+}
