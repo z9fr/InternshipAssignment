@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "@surgeintern/web",
   "private": true,
   "version": "0.0.0",
   "scripts": {
@@ -19,3 +19,4 @@
     "vite": "^2.9.9"
   }
 }
+
