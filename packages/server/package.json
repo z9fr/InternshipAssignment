@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "@surgeintern/server",
   "version": "1.0.0",
   "description": "web server",
   "main": "src/index.ts",
