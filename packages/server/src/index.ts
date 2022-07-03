@@ -1,5 +1,8 @@
 import { app } from "./config/express";
 
-app.listen(4001, () => {
-  console.log("App rnnin");
+const PORT = 4001;
+const HOST = "localhost";
+
+app.listen(PORT, () => {
+  console.log(`Application started on http://${HOST}:${PORT}`);
 });
