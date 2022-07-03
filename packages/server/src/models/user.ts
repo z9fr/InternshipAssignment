@@ -48,6 +48,9 @@ userSchema.pre("save", async function save(next) {
   }
 });
 
+// Method
+userSchema.method({});
+
 userSchema.statics = {
   async get(id) {
     let user;
@@ -59,12 +62,16 @@ userSchema.statics = {
       return user;
     }
 
-    console.log("user does not exist");
-
     throw new APIError({
       message: "User does not exist",
-      stack: "",
-      // status: httpStatus.NOT_FOUND,
+      status: httpStatus.NOT_FOUND,
+      errors: [
+        {
+          field: "User",
+          location: "body",
+          messages: ["User does not exist"],
+        },
+      ],
     });
   },
 
@@ -76,6 +83,24 @@ userSchema.statics = {
       .skip(perPage * (page - 1))
       .limit(perPage)
       .exec();
+  },
+
+  // Check if the user email is a duplicate
+  checkDuplicateEmail(error) {
+    if (error.name === "MongoServerError" && error.code === 11000) {
+      return new APIError({
+        message: "Validation Error",
+        errors: [
+          {
+            field: "email",
+            location: "body",
+            messages: ['"email" already exists'],
+          },
+        ],
+        status: httpStatus.CONFLICT,
+      });
+    }
+    return error;
   },
 };
 

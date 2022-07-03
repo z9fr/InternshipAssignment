@@ -1,15 +1,14 @@
-import ExtendableError, { IErrorConstructor } from "./extandable-error";
+import { ExtendableError, IErrorDetails } from "./extandable-error";
+
+interface IAPIError {
+  status: number;
+  message: string;
+  errors: IErrorDetails[];
+}
 
 class APIError extends ExtendableError {
-  /**
-   * Creates an API error.
-   * @param {string} message - Error message.
-   */
-  constructor({ message, stack }: IErrorConstructor) {
-    super({
-      message,
-      stack,
-    });
+  constructor({ status, message, errors }: IAPIError) {
+    super(status, message, errors);
   }
 }
 
