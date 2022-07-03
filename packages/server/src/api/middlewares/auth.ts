@@ -1,26 +1,28 @@
 import httpStatus from "http-status";
-import User from "../models/user";
-import APIError from "../errors/api-error";
+import APIError from "../../errors/api-error";
 import { Request, Response, NextFunction } from "express";
 import { verify } from "jsonwebtoken";
-import { errorHandler } from "../api/controllers/error.handler";
-import env from "../config/env";
+import env from "../../config/env";
 
-export const isAuth = (req: Request, res: Response, next: NextFunction) => {
+export const isAuth = (
+  req: Request,
+  _res: Response,
+  next: NextFunction,
+  role?: string
+) => {
   const authorization = req.headers["authorization"];
   if (!authorization) {
-    errorHandler(
-      res,
+    next(
       new APIError({
         message: "Unauthorized",
+        stack: "",
         status: httpStatus.UNAUTHORIZED,
         errors: [
           {
             messages: ["Authorization Header Missing"],
           },
         ],
-      }),
-      next
+      })
     );
   }
 
@@ -29,17 +31,20 @@ export const isAuth = (req: Request, res: Response, next: NextFunction) => {
     const payload = verify(token!, env.ACCESS_TOKEN_SECRET!);
     console.log(payload);
   } catch (err) {
-    errorHandler(
-      res,
+    next(
       new APIError({
         message: err.message,
         errors: [],
+        stack: err.stack,
         status: httpStatus.UNAUTHORIZED,
-      }),
-      next
+      })
     );
-    console.log(err);
   }
+
+  console.log("trying to get =>", role);
 
   next();
 };
+/*
+ * eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.XbPfbIHMI6arZ3Y922BhjWgQzWXcXNrz0ogtVhfEd2o
+ * */

@@ -93,6 +93,7 @@ userSchema.statics = {
           messages: ["User does not exist"],
         },
       ],
+      stack: "",
     });
   },
 
@@ -120,6 +121,7 @@ userSchema.statics = {
             messages: ['"email" already exists'],
           },
         ],
+        stack: error.stack,
         status: httpStatus.CONFLICT,
       });
     }

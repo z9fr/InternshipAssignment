@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { AppDataSource } from "../../config/data-source";
 import User from "../../models/user";
-import { errorHandler } from "./error.handler";
 
 export const getUsers = async (req: Request, res: Response) => {
   /*
@@ -24,8 +23,7 @@ export const createUser = async (
     const savedUser = await user.save();
     res.json(savedUser);
   } catch (err) {
-    // next(User.checkDuplicateEmail(error));
-    errorHandler(res, User.checkDuplicateEmail(err), next);
+    next(User.checkDuplicateEmail(err));
   }
 };
 

@@ -1,15 +1,9 @@
 import { ExtendableError } from "./extandable-error";
-import { IErrorDetails } from "@surgeintern/common/types";
-
-interface IAPIError {
-  status: number;
-  message: string;
-  errors: IErrorDetails[];
-}
+import { IErrorDetails, IAPIError } from "@surgeintern/common/types";
 
 class APIError extends ExtendableError {
-  constructor({ status, message, errors }: IAPIError) {
-    super(status, message, errors);
+  constructor({ status, message, errors, stack }: IAPIError) {
+    super(status, message, stack, errors);
   }
 }
 
