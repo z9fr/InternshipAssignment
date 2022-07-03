@@ -28,3 +28,9 @@ export const createUser = async (
     errorHandler(res, User.checkDuplicateEmail(err), next);
   }
 };
+
+export const testRoute = (req: Request, res: Response) => {
+  res.json({
+    hi: "wordl",
+  });
+};
