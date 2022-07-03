@@ -12,7 +12,7 @@ export const handler = (
   err: APIError,
   _req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const response = {
     message: err.message || httpStatus[err.status],

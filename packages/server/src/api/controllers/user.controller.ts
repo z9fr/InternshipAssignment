@@ -2,12 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import User, { ILoginRequest } from "../../models/user";
 
 export const getUsers = async (req: Request, res: Response) => {
-  /*
-  const users = await AppDataSource.manager.find(User);
-  users.forEach((u) => {
-    delete u.lastName;
-  });
-  */
   const users = await User.list(req.query);
   res.json(users);
 };
@@ -26,7 +20,7 @@ export const createUser = async (
   }
 };
 
-export const testRoute = (req: Request, res: Response) => {
+export const testRoute = (_req: Request, res: Response) => {
   res.json({
     hi: "wordl",
   });

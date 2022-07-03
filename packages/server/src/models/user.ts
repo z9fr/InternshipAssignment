@@ -1,19 +1,12 @@
 import mongoose from "mongoose";
 import httpStatus from "http-status";
-import APIError from "../errors/api-error";
 import { isNil, omitBy } from "lodash";
+
+import APIError from "../errors/api-error";
 import { createAccessToken } from "../utils/generateToken";
+import config from "../config/env";
 
-const roles = ["user", "admin"];
-
-export interface ILoginRequest {
-  email: string;
-  password: string;
-}
-
-interface ISuccessLogin {
-  token: string;
-}
+const roles = [config.roles.USER, config.roles.ADMIN];
 
 const userSchema = new mongoose.Schema(
   {
@@ -61,7 +54,7 @@ const userSchema = new mongoose.Schema(
     accountType: {
       type: String,
       enum: roles,
-      default: "user",
+      default: config.roles.USER,
     },
   },
   {

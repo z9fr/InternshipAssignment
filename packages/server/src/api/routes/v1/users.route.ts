@@ -6,6 +6,7 @@ import {
   testRoute,
   userAuth,
 } from "../../controllers/user.controller";
+import env from "../../../config/env";
 
 const router = express.Router();
 
@@ -16,7 +17,7 @@ router.route("/login").post(userAuth);
 router.get(
   "/test",
   (req: Request, res: Response, next: NextFunction) => {
-    isAuth(req, res, next, "admin");
+    isAuth(req, res, next, env.roles.USER);
   },
   testRoute
 );

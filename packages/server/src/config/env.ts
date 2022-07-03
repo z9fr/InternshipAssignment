@@ -15,4 +15,8 @@ export default {
   },
   isDev: true,
   ACCESS_TOKEN_SECRET: "secret",
+  roles: {
+    ADMIN: "admin",
+    USER: "user",
+  },
 };
