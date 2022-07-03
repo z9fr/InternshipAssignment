@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import User, { ILoginRequest } from "../../models/user";
+import User from "../../models/user";
 
 export const getUsers = async (req: Request, res: Response) => {
   const users = await User.list(req.query);

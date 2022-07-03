@@ -1,0 +1,17 @@
+# User 
+/login -> user login
+/passwd/reset -> reset password
+/magic/login -> first time login
+
+# BOTH
+
+/notes/ -> user notes (user , admin)
+/notes/delete 
+/notes/update
+/notes/create
+
+
+# Admin Only
+
+/user/create -> (admin) create user
+
