@@ -7,6 +7,14 @@ const roles = ["user", "admin"];
 
 const userSchema = new mongoose.Schema(
   {
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
+    },
     email: {
       type: String,
       match: /^\S+@\S+\.\S+$/,
@@ -14,6 +22,19 @@ const userSchema = new mongoose.Schema(
       unique: true,
       trim: true,
       lowercase: true,
+    },
+
+    dateOfBirth: {
+      type: Date,
+    },
+
+    mobile: {
+      type: Number,
+    },
+
+    status: {
+      type: Boolean,
+      default: false,
     },
     password: {
       type: String,
@@ -27,7 +48,7 @@ const userSchema = new mongoose.Schema(
       index: true,
       trim: true,
     },
-    role: {
+    accountType: {
       type: String,
       enum: roles,
       default: "user",
@@ -87,6 +108,8 @@ userSchema.statics = {
 
   // Check if the user email is a duplicate
   checkDuplicateEmail(error) {
+    console.log(error.name, error.code);
+
     if (error.name === "MongoServerError" && error.code === 11000) {
       return new APIError({
         message: "Validation Error",

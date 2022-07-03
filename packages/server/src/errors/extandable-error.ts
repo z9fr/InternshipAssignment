@@ -1,8 +1,4 @@
-export interface IErrorDetails {
-  field: string;
-  location: string;
-  messages: string[];
-}
+import { IErrorDetails } from "@surgeintern/common/types";
 
 export class ExtendableError extends Error {
   status = 400;

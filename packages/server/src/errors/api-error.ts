@@ -1,4 +1,5 @@
-import { ExtendableError, IErrorDetails } from "./extandable-error";
+import { ExtendableError } from "./extandable-error";
+import { IErrorDetails } from "@surgeintern/common/types";
 
 interface IAPIError {
   status: number;
