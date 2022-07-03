@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import httpStatus from "http-status";
 import APIError from "../errors/api-error";
 import { isNil, omitBy } from "lodash";
-import { token } from "morgan";
+import { createAccessToken } from "../utils/generateToken";
 
 const roles = ["user", "admin"];
 
@@ -133,8 +133,14 @@ userSchema.statics = {
     if (options.password) {
       if (user) {
         if (await user.passwordMatches(options.password, user?.password)) {
+          const token = createAccessToken({
+            id: user.id,
+            email: user.email,
+            accountType: user.accountType,
+          });
+
           return {
-            token: "Hi",
+            token: token,
           };
         }
       } else {

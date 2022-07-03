@@ -3,6 +3,7 @@ import APIError from "../../errors/api-error";
 import { Request, Response, NextFunction } from "express";
 import { verify } from "jsonwebtoken";
 import env from "../../config/env";
+import { IJwtToken } from "@surgeintern/common/types";
 
 export const isAuth = (
   req: Request,
@@ -28,8 +29,20 @@ export const isAuth = (
 
   try {
     const token = authorization?.split(" ")[1];
-    const payload = verify(token!, env.ACCESS_TOKEN_SECRET!);
+    const payload: IJwtToken = verify(token!, env.ACCESS_TOKEN_SECRET!);
     console.log(payload);
+
+    if (role) {
+      if (role != payload.accountType) {
+        next(
+          new APIError({
+            message: "Not enough privilages",
+            errors: [],
+            status: httpStatus.UNAUTHORIZED,
+          })
+        );
+      }
+    }
   } catch (err) {
     next(
       new APIError({
@@ -41,10 +54,5 @@ export const isAuth = (
     );
   }
 
-  console.log("trying to get =>", role);
-
   next();
 };
-/*
- * eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.XbPfbIHMI6arZ3Y922BhjWgQzWXcXNrz0ogtVhfEd2o
- * */

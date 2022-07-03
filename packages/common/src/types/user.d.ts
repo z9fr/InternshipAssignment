@@ -9,3 +9,9 @@ export interface IUser {
   password: string;
   accountType: string;
 }
+
+export interface IJwtToken {
+  id: string;
+  email: string;
+  accountType: string;
+}
