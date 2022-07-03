@@ -1,7 +1,7 @@
 import express from "express";
 import morgan from "morgan";
 import bodyParser from "body-parser";
-import routes from "../api/routes/v1";
+import v1 from "../api/routes/v1";
 
 const app = express();
 
@@ -10,7 +10,7 @@ app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 app.use(bodyParser.json());
 
 //@TODO mount routes
-app.use("/v1", routes);
+app.use("/v1", v1);
 
 //@TODO error handler
 

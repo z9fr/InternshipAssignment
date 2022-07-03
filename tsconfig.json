@@ -8,6 +8,9 @@
     "skipLibCheck": true,
     "compilerOptions": {
       "baseUrl": "./packages"
+    },
+    "paths": {
+      "@routes/*": ["server/src/api/routes"]
     }
   }
 }
