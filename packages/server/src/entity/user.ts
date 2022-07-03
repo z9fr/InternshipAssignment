@@ -1,3 +1,4 @@
+import { Exclude } from "class-transformer";
 import { Entity, ObjectID, ObjectIdColumn, Column } from "typeorm";
 
 @Entity()
@@ -8,8 +9,8 @@ export class User {
   @Column()
   firstName: string;
 
-  @Column()
-  lastName: string;
+  @Column({ select: false })
+  lastName: string | undefined;
 
   @Column()
   email: string;
@@ -24,5 +25,5 @@ export class User {
   status: boolean;
 
   @Column()
-  password: string;
+  password: string | undefined;
 }
