@@ -4,12 +4,14 @@ import {
   getUsers,
   createUser,
   testRoute,
+  userAuth,
 } from "../../controllers/user.controller";
 
 const router = express.Router();
 
 router.route("/all").get(getUsers);
 router.route("/create").post(createUser);
+router.route("/login").post(userAuth);
 
 router.get(
   "/test",

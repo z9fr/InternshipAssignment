@@ -2,8 +2,18 @@ import mongoose from "mongoose";
 import httpStatus from "http-status";
 import APIError from "../errors/api-error";
 import { isNil, omitBy } from "lodash";
+import { token } from "morgan";
 
 const roles = ["user", "admin"];
+
+export interface ILoginRequest {
+  email: string;
+  password: string;
+}
+
+interface ISuccessLogin {
+  token: string;
+}
 
 const userSchema = new mongoose.Schema(
   {
@@ -70,9 +80,17 @@ userSchema.pre("save", async function save(next) {
 });
 
 // Method
-userSchema.method({});
+userSchema.method({
+  async passwordMatches(password: string, hash: string) {
+    // return bcrypt.compare(password, this.password);
+    return password == hash;
+  },
+});
 
 userSchema.statics = {
+  /*
+   * GET user by ID
+   */
   async get(id) {
     let user;
 
@@ -95,6 +113,42 @@ userSchema.statics = {
       ],
       stack: "",
     });
+  },
+
+  /*
+   * Login + Generate jwt
+   * */
+  async findAndGenerateToken(options: ILoginRequest): Promise<ISuccessLogin> {
+    if (!options.email) {
+      throw new APIError({
+        message: "An email is required to generate a token",
+        errors: [],
+        status: httpStatus.UNAUTHORIZED,
+      });
+    }
+
+    const user = await this.findOne({ email: options.email }).exec();
+    console.log(user);
+
+    if (options.password) {
+      if (user) {
+        if (await user.passwordMatches(options.password, user?.password)) {
+          return {
+            token: "Hi",
+          };
+        }
+      } else {
+        throw new APIError({
+          message: "Invalid Username or password",
+          errors: [],
+          status: httpStatus.UNAUTHORIZED,
+        });
+      }
+    }
+
+    return {
+      token: "",
+    };
   },
 
   list({ page = 1, perPage = 30, name, email, role }) {

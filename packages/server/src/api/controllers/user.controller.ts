@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { AppDataSource } from "../../config/data-source";
-import User from "../../models/user";
+import User, { ILoginRequest } from "../../models/user";
 
 export const getUsers = async (req: Request, res: Response) => {
   /*
@@ -31,4 +30,22 @@ export const testRoute = (req: Request, res: Response) => {
   res.json({
     hi: "wordl",
   });
+};
+
+export const userAuth = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { token } = await User.findAndGenerateToken({
+      email: req.body?.email,
+      password: req.body?.password,
+    });
+    res.json({
+      token: token,
+    });
+  } catch (err) {
+    next(err);
+  }
 };

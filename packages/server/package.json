@@ -10,6 +10,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
   },
   "dependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
     "class-transformer": "^0.5.1",
     "dotenv-safe": "^8.2.0",
