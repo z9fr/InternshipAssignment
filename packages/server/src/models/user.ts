@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
 import httpStatus from "http-status";
 import { isNil, omitBy } from "lodash";
+import { hash, compare } from "bcrypt";
 
 import APIError from "../errors/api-error";
 import { createAccessToken } from "../utils/generateToken";
 import config from "../config/env";
+import { ILoginRequest, ISuccessLogin } from "./user.d";
 
 const roles = [config.roles.USER, config.roles.ADMIN];
 
@@ -62,9 +64,14 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+// pre save hook for user to hash the password
 userSchema.pre("save", async function save(next) {
   try {
     if (!this.isModified("password")) return next();
+
+    // hash user password with bcrypt
+    const pwhash = await hash(this.password, config.bcryptRounds);
+    this.password = pwhash;
 
     return next();
   } catch (error) {
@@ -72,18 +79,17 @@ userSchema.pre("save", async function save(next) {
   }
 });
 
-// Method
+// Methods
 userSchema.method({
-  async passwordMatches(password: string, hash: string) {
-    // return bcrypt.compare(password, this.password);
-    return password == hash;
+  // check if password hash is a match
+  async passwordMatches(password: string, pwhash: string) {
+    return await compare(password, pwhash);
   },
 });
 
 userSchema.statics = {
-  /*
-   * GET user by ID
-   */
+  // get user by
+  // @returns Promise<User, APIError>
   async get(id) {
     let user;
 
@@ -108,9 +114,8 @@ userSchema.statics = {
     });
   },
 
-  /*
-   * Login + Generate jwt
-   * */
+  // user login and token generation
+  // @returns {Promise<ISuccessLogin>}
   async findAndGenerateToken(options: ILoginRequest): Promise<ISuccessLogin> {
     if (!options.email) {
       throw new APIError({
@@ -135,14 +140,16 @@ userSchema.statics = {
           return {
             token: token,
           };
+        } else {
+          console.log("password is wrong");
         }
-      } else {
-        throw new APIError({
-          message: "Invalid Username or password",
-          errors: [],
-          status: httpStatus.UNAUTHORIZED,
-        });
       }
+
+      throw new APIError({
+        message: "Invalid Username or password",
+        errors: [],
+        status: httpStatus.UNAUTHORIZED,
+      });
     }
 
     return {
@@ -150,6 +157,7 @@ userSchema.statics = {
     };
   },
 
+  // get all users in a list with pagination
   list({ page = 1, perPage = 30, name, email, role }) {
     const options = omitBy({ name, email, role }, isNil);
 
