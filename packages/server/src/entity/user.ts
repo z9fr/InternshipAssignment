@@ -1,4 +1,3 @@
-import { Exclude } from "class-transformer";
 import { Entity, ObjectID, ObjectIdColumn, Column } from "typeorm";
 
 @Entity()
@@ -15,7 +14,7 @@ export class User {
   @Column()
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   dateOfBirth: Date;
 
   @Column()
@@ -26,4 +25,11 @@ export class User {
 
   @Column()
   password: string | undefined;
+
+  @Column({
+    type: "enum",
+    enum: ["admin", "user"],
+    default: "user",
+  })
+  accountType: string;
 }
