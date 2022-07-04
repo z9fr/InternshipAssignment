@@ -12,27 +12,35 @@ import { ApplicationRouter } from "./Router";
 // notifications
 import { NotificationsProvider } from "@mantine/notifications";
 
+// react query
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+
 function App() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
+  const queryClient = new QueryClient();
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
 
   return (
     <BrowserRouter>
-      <MantineProvider
-        theme={{ colorScheme }}
-        withGlobalStyles
-        withNormalizeCSS
-      >
-        <ColorSchemeProvider
-          colorScheme={colorScheme}
-          toggleColorScheme={toggleColorScheme}
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+        <MantineProvider
+          theme={{ colorScheme }}
+          withGlobalStyles
+          withNormalizeCSS
         >
-          <NotificationsProvider position="bottom-left">
-            <ApplicationRouter />
-          </NotificationsProvider>
-        </ColorSchemeProvider>
-      </MantineProvider>
+          <ColorSchemeProvider
+            colorScheme={colorScheme}
+            toggleColorScheme={toggleColorScheme}
+          >
+            <NotificationsProvider position="bottom-left">
+              <ApplicationRouter />
+            </NotificationsProvider>
+          </ColorSchemeProvider>
+        </MantineProvider>
+      </QueryClientProvider>
     </BrowserRouter>
   );
 }
