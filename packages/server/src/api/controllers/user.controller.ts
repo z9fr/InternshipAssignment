@@ -32,12 +32,14 @@ export const userAuth = async (
   next: NextFunction
 ) => {
   try {
-    const { token } = await User.findAndGenerateToken({
+    const { token, accountType } = await User.findAndGenerateToken({
       email: req.body?.email,
       password: req.body?.password,
     });
     res.json({
       token: token,
+      accountType: accountType,
+      email: req.body.email,
     });
   } catch (err) {
     next(err);

@@ -5,4 +5,5 @@ export interface ILoginRequest {
 
 export interface ISuccessLogin {
   token: string;
+  accountType: string;
 }

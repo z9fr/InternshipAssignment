@@ -139,6 +139,7 @@ userSchema.statics = {
 
           return {
             token: token,
+            accountType: user.accountType,
           };
         } else {
           console.log("password is wrong");
@@ -154,6 +155,7 @@ userSchema.statics = {
 
     return {
       token: "",
+      accountType: "",
     };
   },
 
