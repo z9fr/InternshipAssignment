@@ -10,6 +10,11 @@ import {
   Button,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { displayNotification } from "../utils/showNotification";
+import { config as apiConfig } from "../config";
+import axios from "axios";
+import { useLocalStorage } from "@mantine/hooks";
+import { useNavigate } from "react-router-dom";
 
 interface IUserLogin {
   email: string;
@@ -17,6 +22,11 @@ interface IUserLogin {
 }
 
 export function UserLogin() {
+  const [auth, setAuth] = useLocalStorage({
+    key: "auth",
+  });
+  let navigate = useNavigate();
+
   const form = useForm({
     initialValues: {
       email: "",
@@ -29,7 +39,32 @@ export function UserLogin() {
   });
 
   const handleLogin = (values: IUserLogin) => {
-    alert(JSON.stringify(values));
+    var config = {
+      method: "post",
+      url: `${apiConfig.apiUrl}users/login`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: JSON.stringify(values),
+    };
+
+    axios(config)
+      .then(function (response) {
+        displayNotification({
+          title: "Login success",
+          color: "teal",
+        });
+        setAuth(response?.data);
+        navigate("/");
+      })
+      .catch(function (error) {
+        console.log(error);
+        displayNotification({
+          title: error.response.data?.message,
+          message: error?.message,
+          color: "red",
+        });
+      });
   };
 
   return (

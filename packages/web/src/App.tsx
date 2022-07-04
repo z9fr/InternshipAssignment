@@ -35,7 +35,7 @@ function App() {
             colorScheme={colorScheme}
             toggleColorScheme={toggleColorScheme}
           >
-            <NotificationsProvider position="bottom-left">
+            <NotificationsProvider position="top-right">
               <ApplicationRouter />
             </NotificationsProvider>
           </ColorSchemeProvider>
