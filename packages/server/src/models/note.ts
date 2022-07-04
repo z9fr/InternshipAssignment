@@ -42,6 +42,18 @@ notesSchema.statics = {
     });
   },
 
+  async myNotes({ page = 1, perPage = 30, ownedBy }) {
+    // return this.find({ ownedBy: id });
+
+    const options = omitBy({ ownedBy }, isNil);
+
+    return this.find(options)
+      .sort({ createdAt: -1 })
+      .skip(perPage * (page - 1))
+      .limit(perPage)
+      .exec();
+  },
+
   list({ page = 1, perPage = 30, title }) {
     const options = omitBy({ title }, isNil);
 
