@@ -1,5 +1,6 @@
 import { useState, ReactNode } from "react";
 import {
+  Container,
   AppShell,
   Navbar,
   Header,
@@ -32,16 +33,6 @@ export default function Layout(children: LayoutProps) {
       navbarOffsetBreakpoint="sm"
       asideOffsetBreakpoint="sm"
       fixed
-      navbar={
-        <Navbar
-          p="md"
-          hiddenBreakpoint="sm"
-          hidden={!opened}
-          width={{ sm: 200, lg: 300 }}
-        >
-          <Text>Application navbar</Text>
-        </Navbar>
-      }
       aside={
         <>
           {children.showSiderbar ? (
@@ -79,7 +70,7 @@ export default function Layout(children: LayoutProps) {
         </Header>
       }
     >
-      {children.children}
+      <Container size={"xl"}>{children.children}</Container>
     </AppShell>
   );
 }
