@@ -3,12 +3,14 @@ import {
   MantineProvider,
   ColorSchemeProvider,
   ColorScheme,
-  Button,
 } from "@mantine/core";
 
 // routes
 import { BrowserRouter } from "react-router-dom";
 import { ApplicationRouter } from "./Router";
+
+// notifications
+import { NotificationsProvider } from "@mantine/notifications";
 
 function App() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>("light");
@@ -17,18 +19,20 @@ function App() {
 
   return (
     <BrowserRouter>
-      <ColorSchemeProvider
-        colorScheme={colorScheme}
-        toggleColorScheme={toggleColorScheme}
+      <MantineProvider
+        theme={{ colorScheme }}
+        withGlobalStyles
+        withNormalizeCSS
       >
-        <MantineProvider
-          theme={{ colorScheme }}
-          withGlobalStyles
-          withNormalizeCSS
+        <ColorSchemeProvider
+          colorScheme={colorScheme}
+          toggleColorScheme={toggleColorScheme}
         >
-          <Button> Helliiio World </Button>
-        </MantineProvider>
-      </ColorSchemeProvider>
+          <NotificationsProvider position="bottom-left">
+            <ApplicationRouter />
+          </NotificationsProvider>
+        </ColorSchemeProvider>
+      </MantineProvider>
     </BrowserRouter>
   );
 }
