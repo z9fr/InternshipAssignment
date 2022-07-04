@@ -4,6 +4,9 @@ import { useRoutes } from "react-router-dom";
 import { Dashboard } from "./pages/dashboad";
 import { UserLogin } from "./pages/login";
 
+// auth
+import { IsLoggedIn } from "./auth/isAuth";
+
 // layout
 import Layout from "./layouts";
 
@@ -12,9 +15,11 @@ export const ApplicationRouter = () => {
     {
       path: "/",
       element: (
-        <Layout showSiderbar={false}>
-          <Dashboard />
-        </Layout>
+        <IsLoggedIn>
+          <Layout showSiderbar={false}>
+            <Dashboard />
+          </Layout>
+        </IsLoggedIn>
       ),
     },
     {

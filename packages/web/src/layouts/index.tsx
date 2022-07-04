@@ -59,11 +59,6 @@ export default function Layout(children: LayoutProps) {
           ) : null}
         </>
       }
-      footer={
-        <Footer height={60} p="md">
-          Application footer
-        </Footer>
-      }
       header={
         <Header height={70} p="md">
           <div
