@@ -10,16 +10,15 @@ import env from "../../../config/env";
 
 const router = express.Router();
 
-router.route("/all").get(getUsers);
 router.route("/create").post(createUser);
 router.route("/login").post(userAuth);
 
 router.get(
-  "/test",
+  "/all",
   (req: Request, res: Response, next: NextFunction) => {
-    isAuth(req, res, next, env.roles.USER);
+    isAuth(req, res, next, env.roles.ADMIN);
   },
-  testRoute
+  getUsers
 );
 
 export default router;
