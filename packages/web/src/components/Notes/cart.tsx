@@ -71,7 +71,6 @@ export const NoteCard = (props: INoteCard) => {
         </form>
       </Modal>
       <Paper
-        shadow="md"
         p="sm"
         withBorder
         m={1}
