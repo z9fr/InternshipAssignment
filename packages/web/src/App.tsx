@@ -13,7 +13,7 @@ import { ApplicationRouter } from "./Router";
 import { NotificationsProvider } from "@mantine/notifications";
 
 function App() {
-  const [colorScheme, setColorScheme] = useState<ColorScheme>("light");
+  const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
 
