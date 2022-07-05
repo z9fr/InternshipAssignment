@@ -10,6 +10,17 @@ import { ILoginRequest, ISuccessLogin } from "./user.d";
 
 const roles = [config.roles.USER, config.roles.ADMIN];
 
+export interface ITransformedUser {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  dateOfBirth: Date;
+  accountType: string;
+  mobile: number;
+  status: Boolean;
+}
+
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -47,12 +58,6 @@ const userSchema = new mongoose.Schema(
       minlength: 6,
       maxlength: 128,
     },
-    name: {
-      type: String,
-      maxlength: 128,
-      index: true,
-      trim: true,
-    },
     accountType: {
       type: String,
       enum: roles,
@@ -84,6 +89,27 @@ userSchema.method({
   // check if password hash is a match
   async passwordMatches(password: string, pwhash: string) {
     return await compare(password, pwhash);
+  },
+
+  transform() {
+    const transformed = {};
+    const fields = [
+      "_id",
+      "firstName",
+      "lastName",
+      "email",
+      "dateOfBirth",
+      "accountType",
+      "mobile",
+      "status",
+      "accountType",
+    ];
+
+    fields.forEach((field) => {
+      transformed[field] = this[field];
+    });
+
+    return transformed;
   },
 });
 

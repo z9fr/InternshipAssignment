@@ -1,9 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import User from "../../models/user";
+import { IUser } from "@surgeintern/common/types";
 
 export const getUsers = async (req: Request, res: Response) => {
   const users = await User.list(req.query);
-  res.json(users);
+  const transformedUsers = users.map((user: IUser) => user.transform());
+  res.json(transformedUsers);
 };
 
 export const createUser = async (
@@ -14,7 +16,8 @@ export const createUser = async (
   try {
     const user = new User(req.body);
     const savedUser = await user.save();
-    res.json(savedUser);
+
+    res.json(savedUser.transform());
   } catch (err) {
     next(User.checkDuplicateEmail(err));
   }
