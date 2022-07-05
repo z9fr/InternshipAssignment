@@ -1,6 +1,7 @@
 import {
   Avatar,
   Badge,
+  Modal,
   Table,
   Group,
   Text,
@@ -11,21 +12,28 @@ import {
   Popper,
 } from "@mantine/core";
 import { Pencil, Trash } from "tabler-icons-react";
-import { UserCardImage } from "./userDetails";
 import { useState } from "react";
 
 import { IUsersTableProps, IUser } from "../../types/users";
+import { UpdateUserDetails } from "./editUser";
+import { UserCardImage } from "./userDetails";
 
 export function UsersTable({ data }: IUsersTableProps) {
+  const [visible, setVisible] = useState(false);
+  const [opened, setOpened] = useState(false);
+  const [previewUser, setPreviewUser] = useState<IUser | undefined>();
   const [referenceElement, setReferenceElement] = useState<
     HTMLElement | undefined
   >();
-  const [visible, setVisible] = useState(false);
-  const [previewUser, setPreviewUser] = useState<IUser | undefined>();
 
   const showPreview = (user: IUser) => {
     setPreviewUser(user);
     setVisible(!visible);
+  };
+
+  const showEditor = (user: IUser) => {
+    setPreviewUser(user);
+    setOpened(true);
   };
 
   const theme = useMantineTheme();
@@ -70,7 +78,7 @@ export function UsersTable({ data }: IUsersTableProps) {
       <td>
         <Group spacing={0} position="right">
           <ActionIcon>
-            <Pencil size={16} />
+            <Pencil size={16} onClick={() => showEditor(item)} />
           </ActionIcon>
           <ActionIcon color="red">
             <Trash size={16} />
@@ -107,19 +115,34 @@ export function UsersTable({ data }: IUsersTableProps) {
   ));
 
   return (
-    <ScrollArea>
-      <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
-        <thead>
-          <tr>
-            <th>User's name</th>
-            <th>Account Type</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </Table>
-    </ScrollArea>
+    <>
+      <Modal
+        opened={opened}
+        onClose={() => setOpened(false)}
+        size={"lg"}
+        withCloseButton={false}
+        padding={0}
+        radius="md"
+        style={{
+          marginTop: 100,
+        }}
+      >
+        <UpdateUserDetails user={previewUser} />
+      </Modal>
+      <ScrollArea>
+        <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
+          <thead>
+            <tr>
+              <th>User's name</th>
+              <th>Account Type</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th />
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </Table>
+      </ScrollArea>
+    </>
   );
 }
