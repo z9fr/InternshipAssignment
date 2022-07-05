@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import Note from "../../models/note";
 import { decodedPayload } from "../../utils/jwtDecoder";
 import { Not } from "typeorm";
+import { NamedExports } from "typescript";
 
 export const getNotes = async (req: Request, res: Response) => {
   const notes = await Note.list(req.query);
@@ -66,6 +67,24 @@ export const getUserNotes = async (
         errors: [],
       });
     }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateNotes = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const id = req.params.id;
+    const note = await Note.get(id);
+    const newNote = new Note(req.body);
+
+    await note.updateOne(newNote, { override: true, upsert: true });
+    const savedNote = await Note.findById(note._id);
+    res.json(savedNote);
   } catch (err) {
     next(err);
   }

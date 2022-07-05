@@ -3,7 +3,7 @@ import { isAuth } from "../../middlewares/auth";
 import {
   getUsers,
   createUser,
-  testRoute,
+  replaceUser,
   userAuth,
 } from "../../controllers/user.controller";
 import env from "../../../config/env";
@@ -19,6 +19,14 @@ router.get(
     isAuth(req, res, next, env.roles.ADMIN);
   },
   getUsers
+);
+
+router.put(
+  "/update/:id",
+  (req: Request, res: Response, next: NextFunction) => {
+    isAuth(req, res, next, env.roles.ADMIN);
+  },
+  replaceUser
 );
 
 export default router;
