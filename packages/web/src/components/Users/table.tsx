@@ -8,18 +8,41 @@ import {
   Anchor,
   ScrollArea,
   useMantineTheme,
+  Popper,
 } from "@mantine/core";
 import { Pencil, Trash } from "tabler-icons-react";
-import { IUsersTableProps } from "../../types/users";
+import { UserCardImage } from "./userDetails";
+import { useState } from "react";
+
+import { IUsersTableProps, IUser } from "../../types/users";
 
 export function UsersTable({ data }: IUsersTableProps) {
+  const [referenceElement, setReferenceElement] = useState<
+    HTMLElement | undefined
+  >();
+  const [visible, setVisible] = useState(false);
+  const [previewUser, setPreviewUser] = useState<IUser | undefined>();
+
+  const showPreview = (user: IUser) => {
+    setPreviewUser(user);
+    setVisible(!visible);
+  };
+
   const theme = useMantineTheme();
   const rows = data.map((item) => (
-    <tr key={item?._id}>
+    <tr key={item?._id} ref={setReferenceElement}>
       <td>
         <Group spacing="sm">
           <Avatar size={30} radius={30} />
-          <Text size="sm" weight={500}>
+
+          <Text
+            size="sm"
+            weight={500}
+            onClick={() => showPreview(item)}
+            style={{
+              cursor: "pointer",
+            }}
+          >
             {`${item?.firstName} ${item?.lastName}`}
           </Text>
         </Group>
@@ -54,6 +77,32 @@ export function UsersTable({ data }: IUsersTableProps) {
           </ActionIcon>
         </Group>
       </td>
+      <Group position="center">
+        <Popper
+          mounted={visible}
+          referenceElement={referenceElement}
+          position="bottom"
+          placement="start"
+          gutter={9}
+          arrowSize={5}
+          withArrow
+          transition="pop"
+          transitionDuration={150}
+          transitionTimingFunction="ease"
+        >
+          <UserCardImage
+            name={`${previewUser?.firstName} ${previewUser?.lastName}`}
+            email={`${previewUser?.email}`}
+            dateOfBirth={previewUser?.dateOfBirth}
+            mobile={previewUser?.mobile}
+            status={previewUser?.status}
+            accountType={previewUser?.accountType}
+            createdAt={previewUser?.createdAt}
+            image={`https://picsum.photos/400/100/?blur`}
+            _id={previewUser?._id}
+          />
+        </Popper>
+      </Group>
     </tr>
   ));
 
