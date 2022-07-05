@@ -46,6 +46,8 @@ export function TableSort({ data }: TableSortProps) {
 
   const showEditor = (user: IUser) => {
     setPreviewUser(user);
+
+    setVisible(false);
     setOpened(true);
   };
 
@@ -73,14 +75,20 @@ export function TableSort({ data }: TableSortProps) {
     <tr
       key={row?._id}
       ref={setReferenceElement}
-      onMouseEnter={() => showPreview(row)}
-      onMouseLeave={() => setVisible(false)}
       onClick={() => showPreview(row)}
+      style={{
+        cursor: "pointer",
+      }}
     >
       <td>
         <Text size="sm">{row._id}</Text>
       </td>
-      <td>{row?.firstName}</td>
+      <td
+        onMouseEnter={() => showPreview(row)}
+        onMouseLeave={() => setVisible(false)}
+      >
+        {row?.firstName}
+      </td>
       <td> {row?.lastName}</td>
       <td>
         <Badge>{row.accountType}</Badge>{" "}
@@ -97,7 +105,10 @@ export function TableSort({ data }: TableSortProps) {
 
       <td>
         <Group spacing={0} position="right">
-          <ActionIcon>
+          <ActionIcon
+            onMouseEnter={() => setVisible(false)}
+            onMouseLeave={() => setVisible(false)}
+          >
             <Pencil size={16} onClick={() => showEditor(row)} />
           </ActionIcon>
           <ActionIcon color="red">
@@ -134,8 +145,9 @@ export function TableSort({ data }: TableSortProps) {
           onChange={handleSearchChange}
         />
         <Table
-          horizontalSpacing="md"
-          verticalSpacing="xs"
+          horizontalSpacing="lg"
+          verticalSpacing="sm"
+          highlightOnHover
           sx={{ tableLayout: "fixed", minWidth: 700 }}
         >
           <thead>
@@ -164,9 +176,9 @@ export function TableSort({ data }: TableSortProps) {
               </Th>
 
               <Th
-                sorted={sortBy === "email"}
+                sorted={sortBy === "accountType"}
                 reversed={reverseSortDirection}
-                onSort={() => setSorting("email")}
+                onSort={() => setSorting("accountType")}
               >
                 Account type
               </Th>
