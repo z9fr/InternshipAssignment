@@ -19,9 +19,10 @@ import { UpdateUserDetails } from "./editUser";
 import { UserCardImage } from "./userDetails";
 
 export function UsersTable({ data }: IUsersTableProps) {
-  const [visible, setVisible] = useState(false);
   const [opened, setOpened] = useState(false);
   const [previewUser, setPreviewUser] = useState<IUser | undefined>();
+
+  const [visible, setVisible] = useState(false);
   const [referenceElement, setReferenceElement] = useState<
     HTMLElement | undefined
   >();

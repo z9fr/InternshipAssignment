@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   ActionIcon,
+  Popper,
   Modal,
   Badge,
   Anchor,
@@ -15,28 +16,42 @@ import {
 import { Pencil, Trash, Search } from "tabler-icons-react";
 
 // types
-import { RowData, TableSortProps, ThProps } from "../../types/userTable";
+import { RowData, TableSortProps } from "../../types/userTable";
 import { IUser } from "../../types/users";
 
 // components
 import { UpdateUserDetails } from "./editUser";
 import { Th } from "./tableHeading";
+import { UserCardImage } from "./userDetails";
 
 // helpr
 import { sortData } from "./sortData";
 
 export function TableSort({ data }: TableSortProps) {
+  // seach , sort and reverse
   const [search, setSearch] = useState("");
   const [sortedData, setSortedData] = useState(data);
   const [sortBy, setSortBy] = useState<keyof RowData>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
 
+  // user model
   const [opened, setOpened] = useState(false);
   const [previewUser, setPreviewUser] = useState<IUser | undefined>();
+
+  // user details preview
+  const [visible, setVisible] = useState(false);
+  const [referenceElement, setReferenceElement] = useState<
+    HTMLElement | undefined
+  >();
 
   const showEditor = (user: IUser) => {
     setPreviewUser(user);
     setOpened(true);
+  };
+
+  const showPreview = (user: IUser) => {
+    setPreviewUser(user);
+    setVisible(!visible);
   };
 
   const setSorting = (field: keyof RowData) => {
@@ -55,12 +70,18 @@ export function TableSort({ data }: TableSortProps) {
   };
 
   const rows = sortedData.map((row) => (
-    <tr key={row._id}>
+    <tr
+      key={row?._id}
+      ref={setReferenceElement}
+      onMouseEnter={() => showPreview(row)}
+      onMouseLeave={() => setVisible(false)}
+      onClick={() => showPreview(row)}
+    >
       <td>
         <Text size="sm">{row._id}</Text>
       </td>
-      <td>{row.firstName}</td>
-      <td> {row.lastName}</td>
+      <td>{row?.firstName}</td>
+      <td> {row?.lastName}</td>
       <td>
         <Badge>{row.accountType}</Badge>{" "}
       </td>
@@ -176,6 +197,33 @@ export function TableSort({ data }: TableSortProps) {
           </tbody>
         </Table>
       </ScrollArea>
+
+      <Group position="center">
+        <Popper
+          mounted={visible}
+          referenceElement={referenceElement}
+          position="bottom"
+          placement="start"
+          gutter={9}
+          arrowSize={5}
+          withArrow
+          transition="pop"
+          transitionDuration={150}
+          transitionTimingFunction="ease"
+        >
+          <UserCardImage
+            name={`${previewUser?.firstName} ${previewUser?.lastName}`}
+            email={`${previewUser?.email}`}
+            dateOfBirth={previewUser?.dateOfBirth}
+            mobile={previewUser?.mobile}
+            status={previewUser?.status}
+            accountType={previewUser?.accountType}
+            createdAt={previewUser?.createdAt}
+            image={`https://picsum.photos/400/100/?blur`}
+            _id={previewUser?._id}
+          />
+        </Popper>
+      </Group>
     </>
   );
 }
