@@ -81,10 +81,12 @@ export const updateNotes = async (
     const id = req.params.id;
     const note = await Note.get(id);
     const newNote = new Note(req.body);
+    newNote._id = id;
 
+    console.log(newNote);
     await note.updateOne(newNote, { override: true, upsert: true });
-    const savedNote = await Note.findById(note._id);
-    res.json(savedNote);
+    const updatedNote = await Note.findById(note._id);
+    res.json(updatedNote);
   } catch (err) {
     next(err);
   }
