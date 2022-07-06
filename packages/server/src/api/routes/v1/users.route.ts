@@ -30,12 +30,6 @@ router.put(
   replaceUser
 );
 
-router.patch(
-  "/reset/:id",
-  (req: Request, res: Response, next: NextFunction) => {
-    isAuth(req, res, next, env.roles.ADMIN);
-  },
-  resetPassword
-);
+router.route("/reset/:id").patch(resetPassword);
 
 export default router;

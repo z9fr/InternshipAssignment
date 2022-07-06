@@ -26,8 +26,8 @@ export const createUser = async (
     const urlBuilder = `${env.host}verify/?id=${savedUser._id}&token=${token}`;
 
     sendMail(
-      "email verification",
-      `please verify your email by clicking on the below url <br> ${urlBuilder}`,
+      "Email verification",
+      `please verify your email by clicking on the below url <br> <a href="${urlBuilder}"> click here </a> <br> <br> if the link is not clickable copy the below url ${urlBuilder}`,
       user.email
     );
 
