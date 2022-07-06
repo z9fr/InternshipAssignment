@@ -38,10 +38,6 @@ The signature ensures that the token hasn’t been altered.
 
 # What is the difference between SQL and NoSQL databases?
 
-- SQL is Relational Databases whereas NoSQL is a Non-relational or Distributed Database.
-- SQL databases are table based and nosql databases and document based
-
-
 | SQL                                                     | NOSQL                                     |
 |---------------------------------------------------------|-------------------------------------------|
 | Relational Database                                     | Non-relational or Distributed databases   |
@@ -49,4 +45,25 @@ The signature ensures that the token hasn’t been altered.
 | vertically scalable                                     | horizontally scalable                     |
 | has a predefined schema                                 | use dynamic schema for unstructured data. |
 | requires specialized DB hardware for better performance | uses commodity hardware.                  |
+
+
+# Suggest a good state management for frontend application and explain why you recommend it.
+
+A state is a representation of a system in a given time. State refers to the data stored in Application in the form of a string, array, object, etc.
+
+### Fetching data  ( Communication state )
+
+if we take a react application as a example and if im Suggesting a state management. my usual go to would be react query in a case of rest API,
+but if the backend users graphql I would recommand apollo. In a case where there's a application that needs like a custom setup I would recommand
+redux but just for a avarage react app the above would be my suggested libs
+
+### Local state
+
+local state is pretty much any client side state that just one component or few near by comoponent needs access to, like a check box to show 
+some information. For this type of stuff I would usually use build in use State hook. if things get more complex we can also use the useReducer hook
+
+### Global state
+
+in a situation like this i like to use react context or pretty much any state management libs
+
 
