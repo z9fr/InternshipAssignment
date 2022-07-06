@@ -4,6 +4,7 @@ import { useRoutes } from "react-router-dom";
 import { Dashboard } from "./pages/dashboad";
 import { UserLogin } from "./pages/login";
 import { UserInformation } from "./pages/userInformation";
+import { Verify } from "./pages/verify";
 
 // auth
 import { IsLoggedIn, IsAdmin } from "./auth/isAuth";
@@ -26,6 +27,11 @@ export const ApplicationRouter = () => {
     {
       path: "/login",
       element: <UserLogin />,
+    },
+
+    {
+      path: "/verify",
+      element: <Verify />,
     },
 
     {
