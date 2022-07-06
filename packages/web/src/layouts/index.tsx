@@ -54,7 +54,9 @@ export default function Layout(children: LayoutProps) {
       header={
         <Header height={70} p="md">
           <Group position="apart">
-            <Text>The Notes</Text>
+            <Text component={Link} to="/">
+              The Notes
+            </Text>
             {IsAdminUser() ? (
               <>
                 <Button
