@@ -11,7 +11,10 @@ require("dotenv-safe").config({
         */
 export default {
   mongo: {
-    uri: "mongodb://127.0.0.1:27017/appdb",
+    uri:
+      process.env.NODE_ENV === "test"
+        ? "mongodb://127.0.0.1:27017/tests"
+        : "mongodb://127.0.0.1:27017/appdb",
   },
   isDev: true,
   host: "http://localhost:3000/",
