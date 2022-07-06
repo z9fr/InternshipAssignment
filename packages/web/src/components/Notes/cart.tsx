@@ -1,5 +1,7 @@
 import {
   Paper,
+  Group,
+  ActionIcon,
   Text,
   Input,
   Title,
@@ -15,8 +17,11 @@ import httpClient from "../../http-common";
 import { displayNotification } from "../../utils/showNotification";
 import { useMutation } from "react-query";
 
+import { Trash } from "tabler-icons-react";
+
 interface INoteCard {
   note: INote;
+  fn_deleteNote: (noteId: string) => void;
 }
 
 interface INoteEdit {
@@ -94,15 +99,24 @@ export const NoteCard = (props: INoteCard) => {
               {...form.getInputProps("description")}
             />
 
-            <Button
-              variant="default"
-              color="lime"
-              compact
-              uppercase
-              type="submit"
-            >
-              Save
-            </Button>
+            <Group position="apart">
+              <Button
+                variant="default"
+                color="lime"
+                compact
+                uppercase
+                type="submit"
+              >
+                Save
+              </Button>
+
+              <ActionIcon
+                color="red"
+                onClick={() => props.fn_deleteNote(selectedNote?._id!)}
+              >
+                <Trash size={16} />
+              </ActionIcon>
+            </Group>
           </Paper>
         </form>
       </Modal>

@@ -30,6 +30,10 @@ export const Dashboard = () => {
     return httpClient.post(`notes/create`, noteDetails);
   });
 
+  const deleteNote = useMutation((noteID: string) => {
+    return httpClient.delete(`notes/rm/${noteID}`);
+  });
+
   const form = useForm({
     initialValues: {
       title: "",
@@ -44,6 +48,26 @@ export const Dashboard = () => {
         title: "Note created successfully",
         color: "teal",
         message: `note  ${values.title} created successfully`,
+      });
+    } catch (err) {
+      console.log(err);
+      displayNotification({
+        title: err?.message,
+        message: err.response.data?.message,
+        color: "red",
+      });
+    }
+
+    notes.refetch();
+  };
+
+  const handleDeleteNote = async (note_Id: string, notes: any) => {
+    try {
+      const data = await deleteNote.mutateAsync(note_Id);
+
+      displayNotification({
+        title: "Note deleted",
+        color: "teal",
       });
     } catch (err) {
       console.log(err);
@@ -138,7 +162,9 @@ export const Dashboard = () => {
             ) : (
               <>
                 {notes.data?.map((note: INote) => {
-                  return <NoteCard note={note} />;
+                  return (
+                    <NoteCard note={note} fn_deleteNote={handleDeleteNote} />
+                  );
                 })}
               </>
             )}
