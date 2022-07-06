@@ -2,15 +2,16 @@ import { useState, ReactNode } from "react";
 import {
   Container,
   AppShell,
-  Navbar,
+  Group,
+  Button,
   Header,
-  Footer,
   Aside,
   Text,
   MediaQuery,
-  Burger,
   useMantineTheme,
 } from "@mantine/core";
+import { IsAdminUser } from "../auth/auth_token";
+import { Link } from "react-router-dom";
 
 interface LayoutProps {
   children: ReactNode;
@@ -52,21 +53,22 @@ export default function Layout(children: LayoutProps) {
       }
       header={
         <Header height={70} p="md">
-          <div
-            style={{ display: "flex", alignItems: "center", height: "100%" }}
-          >
-            <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-              <Burger
-                opened={opened}
-                onClick={() => setOpened((o) => !o)}
-                size="sm"
-                color={theme.colors.gray[6]}
-                mr="xl"
-              />
-            </MediaQuery>
-
-            <Text>Application header</Text>
-          </div>
+          <Group position="apart">
+            <Text>The Notes</Text>
+            {IsAdminUser() ? (
+              <>
+                <Button
+                  sx={{ height: 30 }}
+                  variant="default"
+                  compact
+                  component={Link}
+                  to="/users"
+                >
+                  User Dashboard
+                </Button>
+              </>
+            ) : null}
+          </Group>
         </Header>
       }
     >
