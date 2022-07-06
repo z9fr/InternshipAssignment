@@ -2,8 +2,7 @@ import APIError from "../../errors/api-error";
 import { Request, Response, NextFunction } from "express";
 import Note from "../../models/note";
 import { decodedPayload } from "../../utils/jwtDecoder";
-import { Not } from "typeorm";
-import { NamedExports } from "typescript";
+import mongoose from "mongoose";
 
 export const getNotes = async (req: Request, res: Response) => {
   const notes = await Note.list(req.query);
@@ -87,6 +86,31 @@ export const updateNotes = async (
     await note.updateOne(newNote, { override: true, upsert: true });
     const updatedNote = await Note.findById(note._id);
     res.json(updatedNote);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteNote = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const id = req.params.id;
+    Note.findByIdAndRemove("62c609b25a27fe7f8a5798b3");
+
+    Note.findByIdAndRemove(req.params.id, (err: Error) => {
+      if (!err) {
+        res.json({ success: true });
+      } else {
+        console.log(err);
+        new APIError({
+          status: 401,
+          err,
+        });
+      }
+    });
   } catch (err) {
     next(err);
   }
