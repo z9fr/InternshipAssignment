@@ -2,12 +2,17 @@ import { Paper, TextInput, Button, SimpleGrid } from "@mantine/core";
 import { IUser } from "../../types/users";
 import { CalendarTime, Mail, Phone } from "tabler-icons-react";
 import { useForm } from "@mantine/form";
+import httpClient from "../../http-common";
+import { displayNotification } from "../../utils/showNotification";
+import { useUsers } from "../../query-hooks/users/useUsers";
 
 export interface IUserDetails {
   user: IUser;
+  isEditMode: Boolean;
 }
 
 interface IUpdateDetails {
+  _id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -16,13 +21,59 @@ interface IUpdateDetails {
   accountType: string;
 }
 
-const handleSubmission = (values: IUpdateDetails) => {
-  console.log(JSON.stringify(values));
+const handleSubmission = (
+  values: IUpdateDetails,
+  isEdit: Boolean,
+  userinformation: any
+) => {
+  if (isEdit) {
+    httpClient
+      .put(`users/update/${values?._id}`, JSON.stringify(values))
+      .then(function (response) {
+        displayNotification({
+          title: "User updated successfully",
+          color: "teal",
+          message: `details of ${values.firstName} updated successfully`,
+        });
+        console.log(JSON.stringify(response.data));
+        userinformation.refetch();
+      })
+      .catch(function (error) {
+        console.log(error);
+        displayNotification({
+          title: error.response.data?.message,
+          message: error?.message,
+          color: "red",
+        });
+      });
+  } else {
+    httpClient
+      .post("/users/create", JSON.stringify(values))
+      .then(function (response) {
+        displayNotification({
+          title: "User created success",
+          color: "teal",
+          message: `new user ${values.firstName} added success`,
+        });
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+        displayNotification({
+          title: error.response.data?.message,
+          message: error?.message,
+          color: "red",
+        });
+      });
+  }
+
+  userinformation.refetch();
 };
 
-export const UpdateUserDetails = ({ user }: IUserDetails) => {
+export const UpdateUserDetails = ({ user, isEditMode }: IUserDetails) => {
   const form = useForm({
     initialValues: {
+      _id: user?._id,
       firstName: user?.firstName,
       lastName: user?.lastName,
       email: user?.email,
@@ -32,11 +83,13 @@ export const UpdateUserDetails = ({ user }: IUserDetails) => {
     },
   });
 
+  const userinformation = useUsers();
+
   return (
     <Paper shadow="sm" p="md" withBorder>
       <form
         onSubmit={form.onSubmit((values: IUpdateDetails) =>
-          handleSubmission(values)
+          handleSubmission(values, isEditMode, userinformation)
         )}
       >
         <SimpleGrid cols={2}>
@@ -47,6 +100,7 @@ export const UpdateUserDetails = ({ user }: IUserDetails) => {
             placeholder="Your first name"
             defaultValue={user?.firstName}
             variant="default"
+            {...form.getInputProps("firstName")}
           />
 
           <TextInput
@@ -56,6 +110,7 @@ export const UpdateUserDetails = ({ user }: IUserDetails) => {
             placeholder="Your last name"
             defaultValue={user?.lastName}
             variant="default"
+            {...form.getInputProps("lastName")}
           />
         </SimpleGrid>
 
@@ -67,6 +122,7 @@ export const UpdateUserDetails = ({ user }: IUserDetails) => {
           defaultValue={user?.email}
           variant="default"
           icon={<Mail size={14} />}
+          {...form.getInputProps("email")}
         />
 
         <TextInput
@@ -78,6 +134,7 @@ export const UpdateUserDetails = ({ user }: IUserDetails) => {
           variant="default"
           defaultValue={user?.mobile}
           icon={<Phone size={14} />}
+          {...form.getInputProps("mobile")}
         />
 
         <TextInput
@@ -87,6 +144,7 @@ export const UpdateUserDetails = ({ user }: IUserDetails) => {
           variant="default"
           defaultValue={user?.dateOfBirth}
           icon={<CalendarTime size={14} />}
+          {...form.getInputProps("dateOfBirth")}
         />
 
         <Button

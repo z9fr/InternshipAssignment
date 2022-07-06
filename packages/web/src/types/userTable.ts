@@ -15,6 +15,7 @@ export interface RowData {
 
 export interface TableSortProps {
   data: RowData[];
+  refetch: any;
 }
 
 export interface ThProps {

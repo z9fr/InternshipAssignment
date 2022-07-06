@@ -20,7 +20,7 @@ export const UserInformation = () => {
 
       {users.isSuccess && (
         <>
-          <TableSort data={users.data} />
+          <TableSort data={users.data} refetch={users} />
         </>
       )}
 

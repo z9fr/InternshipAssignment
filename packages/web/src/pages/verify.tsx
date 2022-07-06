@@ -5,7 +5,6 @@ import {
   Paper,
   Title,
   Text,
-  TextInput,
   Button,
   Container,
   Group,
@@ -17,6 +16,8 @@ import { ArrowLeft } from "tabler-icons-react";
 import { useSearchParams } from "react-router-dom";
 import { useForm } from "@mantine/form";
 import axios from "axios";
+import { config as AppConfig } from "../config";
+import { displayNotification } from "../utils/showNotification";
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -52,7 +53,32 @@ export const Verify = () => {
   const token = searchParams.get("token");
 
   const submitForm = (values: Ivalues) => {
-    alert(JSON.stringify(values));
+    let config = {
+      method: "patch",
+      url: `${AppConfig.apiUrl}users/reset/${userID}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: JSON.stringify(values),
+    };
+
+    axios(config)
+      .then(function (response) {
+        displayNotification({
+          title: "Password updated successfully",
+          color: "teal",
+          message: `Password updated`,
+        });
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        displayNotification({
+          title: error.response.data?.message,
+          message: error?.message,
+          color: "red",
+        });
+        console.log(error);
+      });
   };
 
   const form = useForm({

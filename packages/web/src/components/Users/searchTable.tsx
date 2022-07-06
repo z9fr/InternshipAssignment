@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   ActionIcon,
   Popper,
+  Button,
   Modal,
   Badge,
   Anchor,
@@ -11,6 +12,7 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
+import { useForm } from "@mantine/form";
 
 // icons
 import { Pencil, Trash, Search } from "tabler-icons-react";
@@ -27,7 +29,7 @@ import { UserCardImage } from "./userDetails";
 // helpr
 import { sortData } from "./sortData";
 
-export function TableSort({ data }: TableSortProps) {
+export function TableSort({ data, refetch }: TableSortProps) {
   // seach , sort and reverse
   const [search, setSearch] = useState("");
   const [sortedData, setSortedData] = useState(data);
@@ -36,17 +38,29 @@ export function TableSort({ data }: TableSortProps) {
 
   // user model
   const [opened, setOpened] = useState(false);
-  const [previewUser, setPreviewUser] = useState<IUser | undefined>();
+  const [previewUser, setPreviewUser] = useState<IUser | undefined>(null);
+
+  const [editorStatusEdit, setEditorStatusEdit] = useState(false);
+  /*
+   * true => editing a user
+   * false => creating a new user
+   */
 
   // user details preview
   const [visible, setVisible] = useState(false);
-  const [referenceElement, setReferenceElement] = useState<
-    HTMLElement | undefined
-  >();
+  const [referenceElement, setReferenceElement] = useState<HTMLElement>();
 
   const showEditor = (user: IUser) => {
     setPreviewUser(user);
+    setEditorStatusEdit(true);
+    setVisible(false);
+    setOpened(true);
+    refetch.refetch();
+  };
 
+  const addNewUserEditor = () => {
+    setPreviewUser(null);
+    setEditorStatusEdit(false);
     setVisible(false);
     setOpened(true);
   };
@@ -74,7 +88,7 @@ export function TableSort({ data }: TableSortProps) {
   const rows = sortedData.map((row) => (
     <tr
       key={row?._id}
-      ref={setReferenceElement}
+      ref={setReferenceElement!}
       onClick={() => showPreview(row)}
       style={{
         cursor: "pointer",
@@ -132,7 +146,7 @@ export function TableSort({ data }: TableSortProps) {
           marginTop: 100,
         }}
       >
-        <UpdateUserDetails user={previewUser} />
+        <UpdateUserDetails user={previewUser!} isEditMode={editorStatusEdit} />
       </Modal>
       <ScrollArea>
         <TextInput
@@ -144,6 +158,16 @@ export function TableSort({ data }: TableSortProps) {
           value={search}
           onChange={handleSearchChange}
         />
+
+        <Button
+          variant="default"
+          compact
+          mb={20}
+          onClick={() => addNewUserEditor()}
+        >
+          Add new user
+        </Button>
+
         <Table
           horizontalSpacing="lg"
           verticalSpacing="sm"
