@@ -29,7 +29,12 @@ import { UserCardImage } from "./userDetails";
 // helpr
 import { sortData } from "./sortData";
 
-export function TableSort({ data, refetch }: TableSortProps) {
+// hooks
+import { useUsers } from "../../query-hooks/users/useUsers";
+
+export function TableSort() {
+  const { data, isLoading, isError, isSuccess, refetch } = useUsers();
+
   // seach , sort and reverse
   const [search, setSearch] = useState("");
   const [sortedData, setSortedData] = useState(data);
@@ -50,12 +55,14 @@ export function TableSort({ data, refetch }: TableSortProps) {
   const [visible, setVisible] = useState(false);
   const [referenceElement, setReferenceElement] = useState<HTMLElement>();
 
+  console.log(data);
+
   const showEditor = (user: IUser) => {
     setPreviewUser(user);
     setEditorStatusEdit(true);
     setVisible(false);
     setOpened(true);
-    refetch.refetch();
+    refetch();
   };
 
   const addNewUserEditor = () => {
@@ -63,6 +70,7 @@ export function TableSort({ data, refetch }: TableSortProps) {
     setEditorStatusEdit(false);
     setVisible(false);
     setOpened(true);
+    refetch();
   };
 
   const showPreview = (user: IUser) => {
@@ -85,7 +93,7 @@ export function TableSort({ data, refetch }: TableSortProps) {
     );
   };
 
-  const rows = sortedData.map((row) => (
+  const rows = sortedData?.map((row) => (
     <tr
       key={row?._id}
       ref={setReferenceElement!}
@@ -135,131 +143,145 @@ export function TableSort({ data, refetch }: TableSortProps) {
 
   return (
     <>
-      <Modal
-        opened={opened}
-        onClose={() => setOpened(false)}
-        size={"lg"}
-        withCloseButton={false}
-        padding={0}
-        radius="md"
-        style={{
-          marginTop: 100,
-        }}
-      >
-        <UpdateUserDetails user={previewUser!} isEditMode={editorStatusEdit} />
-      </Modal>
-      <ScrollArea>
-        <TextInput
-          variant="default"
-          size="md"
-          placeholder="Search by any field"
-          mb={20}
-          icon={<Search size={14} />}
-          value={search}
-          onChange={handleSearchChange}
-        />
+      {isLoading && <> Loading </>}
+      {isError && (
+        <>
+          <Text p={20}>something went wrong</Text>
+        </>
+      )}
 
-        <Button
-          variant="default"
-          compact
-          mb={20}
-          onClick={() => addNewUserEditor()}
-        >
-          Add new user
-        </Button>
+      {isSuccess && (
+        <>
+          <Modal
+            opened={opened}
+            onClose={() => setOpened(false)}
+            size={"lg"}
+            withCloseButton={false}
+            padding={0}
+            radius="md"
+            style={{
+              marginTop: 100,
+            }}
+          >
+            <UpdateUserDetails
+              user={previewUser!}
+              isEditMode={editorStatusEdit}
+            />
+          </Modal>
+          <ScrollArea>
+            <TextInput
+              variant="default"
+              size="md"
+              placeholder="Search by any field"
+              mb={20}
+              icon={<Search size={14} />}
+              value={search}
+              onChange={handleSearchChange}
+            />
 
-        <Table
-          horizontalSpacing="lg"
-          verticalSpacing="sm"
-          highlightOnHover
-          sx={{ tableLayout: "fixed", minWidth: 700 }}
-        >
-          <thead>
-            <tr>
-              <Th
-                sorted={sortBy === "_id"}
-                reversed={reverseSortDirection}
-                onSort={() => setSorting("_id")}
-              >
-                ID
-              </Th>
-              <Th
-                sorted={sortBy === "firstName"}
-                reversed={reverseSortDirection}
-                onSort={() => setSorting("firstName")}
-              >
-                First Name
-              </Th>
+            <Button
+              variant="default"
+              compact
+              mb={20}
+              onClick={() => addNewUserEditor()}
+            >
+              Add new user
+            </Button>
 
-              <Th
-                sorted={sortBy === "lastName"}
-                reversed={reverseSortDirection}
-                onSort={() => setSorting("lastName")}
-              >
-                Last Name
-              </Th>
+            <Table
+              horizontalSpacing="lg"
+              verticalSpacing="sm"
+              highlightOnHover
+              sx={{ tableLayout: "fixed", minWidth: 700 }}
+            >
+              <thead>
+                <tr>
+                  <Th
+                    sorted={sortBy === "_id"}
+                    reversed={reverseSortDirection}
+                    onSort={() => setSorting("_id")}
+                  >
+                    ID
+                  </Th>
+                  <Th
+                    sorted={sortBy === "firstName"}
+                    reversed={reverseSortDirection}
+                    onSort={() => setSorting("firstName")}
+                  >
+                    First Name
+                  </Th>
 
-              <Th
-                sorted={sortBy === "accountType"}
-                reversed={reverseSortDirection}
-                onSort={() => setSorting("accountType")}
-              >
-                Account type
-              </Th>
+                  <Th
+                    sorted={sortBy === "lastName"}
+                    reversed={reverseSortDirection}
+                    onSort={() => setSorting("lastName")}
+                  >
+                    Last Name
+                  </Th>
 
-              <Th
-                sorted={sortBy === "email"}
-                reversed={reverseSortDirection}
-                onSort={() => setSorting("email")}
-              >
-                Email
-              </Th>
+                  <Th
+                    sorted={sortBy === "accountType"}
+                    reversed={reverseSortDirection}
+                    onSort={() => setSorting("accountType")}
+                  >
+                    Account type
+                  </Th>
 
-              <Th> Action </Th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.length > 0 ? (
-              rows
-            ) : (
-              <tr>
-                <td colSpan={Object.keys(data[0]).length}>
-                  <Text weight={500} align="center">
-                    Nothing found
-                  </Text>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </Table>
-      </ScrollArea>
+                  <Th
+                    sorted={sortBy === "email"}
+                    reversed={reverseSortDirection}
+                    onSort={() => setSorting("email")}
+                  >
+                    Email
+                  </Th>
 
-      <Group position="center">
-        <Popper
-          mounted={visible}
-          referenceElement={referenceElement}
-          position="bottom"
-          placement="start"
-          gutter={9}
-          arrowSize={5}
-          withArrow
-          transition="pop"
-          transitionDuration={150}
-          transitionTimingFunction="ease"
-        >
-          <UserCardImage
-            name={`${previewUser?.firstName} ${previewUser?.lastName}`}
-            email={`${previewUser?.email}`}
-            dateOfBirth={previewUser?.dateOfBirth}
-            mobile={previewUser?.mobile}
-            status={previewUser?.status}
-            accountType={previewUser?.accountType}
-            createdAt={previewUser?.createdAt}
-            image={`https://picsum.photos/400/100/?blur`}
-            _id={previewUser?._id}
-          />
-        </Popper>
-      </Group>
+                  <Th> Action </Th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows?.length > 0 ? (
+                  rows
+                ) : (
+                  <tr>
+                    <td colSpan={Object.keys(data[0]).length}>
+                      <Text weight={500} align="center">
+                        Nothing found
+                      </Text>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </Table>
+          </ScrollArea>
+
+          <Group position="center">
+            <Popper
+              mounted={visible}
+              referenceElement={referenceElement}
+              position="bottom"
+              placement="start"
+              gutter={9}
+              arrowSize={5}
+              withArrow
+              transition="pop"
+              transitionDuration={150}
+              transitionTimingFunction="ease"
+            >
+              <UserCardImage
+                name={`${previewUser?.firstName} ${previewUser?.lastName}`}
+                email={`${previewUser?.email}`}
+                dateOfBirth={previewUser?.dateOfBirth}
+                mobile={previewUser?.mobile}
+                status={previewUser?.status}
+                accountType={previewUser?.accountType}
+                createdAt={previewUser?.createdAt}
+                image={`https://picsum.photos/400/100/?blur`}
+                _id={previewUser?._id}
+              />
+            </Popper>
+          </Group>
+        </>
+      )}
     </>
   );
 }

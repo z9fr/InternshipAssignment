@@ -14,7 +14,6 @@ import { displayNotification } from "../utils/showNotification";
 import { config as apiConfig } from "../config";
 import axios from "axios";
 import { useLocalStorage } from "@mantine/hooks";
-import { useNavigate } from "react-router-dom";
 
 interface IUserLogin {
   email: string;
@@ -25,7 +24,6 @@ export function UserLogin() {
   const [auth, setAuth] = useLocalStorage({
     key: "auth",
   });
-  let navigate = useNavigate();
 
   const form = useForm({
     initialValues: {
@@ -55,7 +53,7 @@ export function UserLogin() {
           color: "teal",
         });
         setAuth(response?.data);
-        navigate("/");
+        window.location = "/";
       })
       .catch(function (error) {
         console.log(error);

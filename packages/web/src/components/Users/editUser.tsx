@@ -1,4 +1,10 @@
-import { Paper, TextInput, Button, SimpleGrid } from "@mantine/core";
+import {
+  Paper,
+  TextInput,
+  Button,
+  SimpleGrid,
+  NativeSelect,
+} from "@mantine/core";
 import { IUser } from "../../types/users";
 import { CalendarTime, Mail, Phone } from "tabler-icons-react";
 import { useForm } from "@mantine/form";
@@ -123,6 +129,14 @@ export const UpdateUserDetails = ({ user, isEditMode }: IUserDetails) => {
           variant="default"
           icon={<Mail size={14} />}
           {...form.getInputProps("email")}
+        />
+
+        <NativeSelect
+          data={["admin", "user"]}
+          placeholder="Account type"
+          label="Account type"
+          required
+          {...form.getInputProps("accountType")}
         />
 
         <TextInput
