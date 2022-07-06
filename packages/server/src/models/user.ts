@@ -151,7 +151,16 @@ userSchema.statics = {
       });
     }
 
-    const user = await this.findOne({ email: options.email }).exec();
+    const user = await this.findOne({
+      $and: [
+        {
+          email: options.email,
+        },
+        {
+          status: true,
+        },
+      ],
+    }).exec();
     console.log(user);
 
     if (options.password) {
