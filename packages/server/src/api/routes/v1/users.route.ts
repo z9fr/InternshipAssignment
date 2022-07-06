@@ -3,6 +3,7 @@ import { isAuth } from "../../middlewares/auth";
 import {
   getUsers,
   createUser,
+  resetPassword,
   replaceUser,
   userAuth,
 } from "../../controllers/user.controller";
@@ -27,6 +28,14 @@ router.put(
     isAuth(req, res, next, env.roles.ADMIN);
   },
   replaceUser
+);
+
+router.patch(
+  "/reset/:id",
+  (req: Request, res: Response, next: NextFunction) => {
+    isAuth(req, res, next, env.roles.ADMIN);
+  },
+  resetPassword
 );
 
 export default router;

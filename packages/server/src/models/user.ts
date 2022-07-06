@@ -185,6 +185,29 @@ userSchema.statics = {
     };
   },
 
+  async resetPasswordCheck(
+    userID: string,
+    oldPassword: string
+  ): Promise<Boolean> {
+    const user = await this.findById(userID);
+
+    if (await user.passwordMatches(oldPassword, user.password)) {
+      return true;
+    }
+
+    throw new APIError({
+      message: "Validation Error",
+      errors: [
+        {
+          field: "password",
+          location: "password",
+          messages: ["old password you enterd was incorrect"],
+        },
+      ],
+      status: httpStatus.BAD_REQUEST,
+    });
+  },
+
   // get all users in a list with pagination
   list({ page = 1, perPage = 30, name, email, role }) {
     const options = omitBy({ name, email, role }, isNil);

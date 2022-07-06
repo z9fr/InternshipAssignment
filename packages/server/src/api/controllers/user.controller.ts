@@ -1,7 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import User from "../../models/user";
 import { IUser } from "@surgeintern/common/types";
-const { omit } = require("lodash");
+import { hash } from "bcrypt";
+import env from "../../config/env";
+import { sendMail } from "../../utils/sendMail";
+import { v4 as uuidv4 } from "uuid";
 
 export const getUsers = async (req: Request, res: Response) => {
   const users = await User.list(req.query);
@@ -16,7 +19,17 @@ export const createUser = async (
 ) => {
   try {
     const user = new User(req.body);
+    user.status = false; // when user register his verification status is false
+    const token = uuidv4();
+    user.password = token; // set a uuid as the password when register
     const savedUser = await user.save();
+    const urlBuilder = `${env.host}verify/?id=${savedUser._id}&token=${token}`;
+
+    sendMail(
+      "email verification",
+      `please verify your email by clicking on the below url <br> ${urlBuilder}`,
+      user.email
+    );
 
     res.json(savedUser.transform());
   } catch (err) {
@@ -60,6 +73,32 @@ export const replaceUser = async (
     const user = await User.get(id);
     const newUser = new User(req.body);
     await user.updateOne(newUser, { override: true, upsert: true });
+    const savedUser = await User.findById(user._id);
+    res.json(savedUser.transform());
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const resetPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const id = req.params.id;
+    const user = await User.get(id);
+    const { newPassword, oldPassword } = req.body;
+    const newUser = user;
+
+    if (await User.resetPasswordCheck(id, oldPassword)) {
+      const pwhash = await hash(newPassword, env.bcryptRounds);
+      newUser.password = pwhash;
+      if (!newUser.status) {
+        newUser.status = true;
+      }
+      await user.updateOne(newUser, { override: true, upsert: true });
+    }
     const savedUser = await User.findById(user._id);
     res.json(savedUser.transform());
   } catch (err) {
