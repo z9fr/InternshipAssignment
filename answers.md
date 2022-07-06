@@ -25,6 +25,27 @@ github secrets.
 # What is JWT and how does it work?
 
 JSON Web Tokens is a self-contained way for securely transmitting information between parties as a JSON object. The information can be verified and trusted 
-because it is digitally signed. 
+because it is digitally signed. JWT tokens are particularly useful when comes to API authentication and server-to-server authorization. 
 
-- write more 
+JWT token has 3 parts, separated by dots(.), and base64 encoded. if we decode the jwt token we gets
+- The header and the payload.
+- The signature.
+
+The header contains the type of token — JWT in this case — and the signing algorithm.  
+The payload contains the claims, display as a json string
+The signature ensures that the token hasn’t been altered.
+
+
+# What is the difference between SQL and NoSQL databases?
+
+- SQL is Relational Databases whereas NoSQL is a Non-relational or Distributed Database.
+- SQL databases are table based and nosql databases and document based
+
+| SQL  | NOSQL
+|-------------- |
+| Relational Database | Non-relational or Distributed databases    |
+| Table based | document based | 
+| vertically scalable | horizontally scalable | 
+| has a predefined schema | NoSQL databases use dynamic schema for unstructured data. |
+| SQL requires specialized DB hardware for better performance  | NoSQL uses commodity hardware. | 
+
