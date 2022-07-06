@@ -41,11 +41,12 @@ The signature ensures that the token hasn’t been altered.
 - SQL is Relational Databases whereas NoSQL is a Non-relational or Distributed Database.
 - SQL databases are table based and nosql databases and document based
 
-| SQL  | NOSQL
-|-------------- |
-| Relational Database | Non-relational or Distributed databases    |
-| Table based | document based | 
-| vertically scalable | horizontally scalable | 
-| has a predefined schema | NoSQL databases use dynamic schema for unstructured data. |
-| SQL requires specialized DB hardware for better performance  | NoSQL uses commodity hardware. | 
+
+| SQL                                                     | NOSQL                                     |
+|---------------------------------------------------------|-------------------------------------------|
+| Relational Database                                     | Non-relational or Distributed databases   |
+| Table based                                             | document based                            |
+| vertically scalable                                     | horizontally scalable                     |
+| has a predefined schema                                 | use dynamic schema for unstructured data. |
+| requires specialized DB hardware for better performance | uses commodity hardware.                  |
 
