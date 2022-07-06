@@ -13,7 +13,7 @@ import {
   Box,
 } from "@mantine/core";
 import { ArrowLeft } from "tabler-icons-react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
 import axios from "axios";
 import { config as AppConfig } from "../config";
@@ -48,6 +48,7 @@ interface Ivalues {
 export const Verify = () => {
   const { classes } = useStyles();
   const [searchParams, _setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const userID = searchParams.get("id");
   const token = searchParams.get("token");
@@ -70,6 +71,7 @@ export const Verify = () => {
           message: `Password updated`,
         });
         console.log(JSON.stringify(response.data));
+        navigate("/");
       })
       .catch(function (error) {
         displayNotification({
