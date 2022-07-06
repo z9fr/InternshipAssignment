@@ -15,7 +15,7 @@ import { useForm } from "@mantine/form";
 import { displayNotification } from "../utils/showNotification";
 
 import httpClient from "../http-common";
-import { config } from "../config";
+import { useMutation } from "react-query";
 
 interface INoteCreate {
   title: string;
@@ -26,6 +26,10 @@ export const Dashboard = () => {
   const notes = useNotes();
   const [createNote, setCreateNote] = useState(false);
 
+  const mutation = useMutation((noteDetails: INoteCreate) => {
+    return httpClient.post(`notes/create`, noteDetails);
+  });
+
   const form = useForm({
     initialValues: {
       title: "",
@@ -33,24 +37,22 @@ export const Dashboard = () => {
     },
   });
 
-  const submitForm = (values: INoteCreate, notes: any) => {
-    httpClient
-      .post(`notes/create`, JSON.stringify(values))
-      .then(function (response) {
-        displayNotification({
-          title: "Note created successfully",
-          color: "teal",
-          message: `note  ${values.title} created successfully`,
-        });
-      })
-      .catch(function (error) {
-        console.log(error);
-        displayNotification({
-          title: error.response.data?.message,
-          message: error?.message,
-          color: "red",
-        });
+  const submitForm = async (values: INoteCreate, notes: any) => {
+    try {
+      const data = await mutation.mutateAsync(values);
+      displayNotification({
+        title: "Note created successfully",
+        color: "teal",
+        message: `note  ${values.title} created successfully`,
       });
+    } catch (err) {
+      console.log(err);
+      displayNotification({
+        title: err?.message,
+        message: err.response.data?.message,
+        color: "red",
+      });
+    }
 
     notes.refetch();
   };

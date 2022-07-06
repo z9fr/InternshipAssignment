@@ -11,20 +11,54 @@ import { useState } from "react";
 import { INote } from "../../types/notes";
 import { useForm } from "@mantine/form";
 
+import httpClient from "../../http-common";
+import { displayNotification } from "../../utils/showNotification";
+import { useMutation } from "react-query";
+
 interface INoteCard {
   note: INote;
+}
+
+interface INoteEdit {
+  _id: string;
+  title: string;
+  description: string;
 }
 
 export const NoteCard = (props: INoteCard) => {
   const [opened, setOpened] = useState(false);
   const [selectedNote, setSelectedNote] = useState<INote | undefined>();
 
+  const mutation = useMutation((updateNote: INoteEdit) => {
+    return httpClient.put(`notes/update/${props?.note._id}`, updateNote);
+  });
+
   const form = useForm({
     initialValues: {
+      _id: selectedNote?._id,
       title: selectedNote?.title,
       description: selectedNote?.description,
     },
   });
+
+  const handleFormSubmission = async (values: INoteEdit) => {
+    try {
+      const data = await mutation.mutateAsync(values);
+
+      displayNotification({
+        title: "Note updated successfully",
+        color: "teal",
+        message: `details of ${values?.title} updated successfully`,
+      });
+    } catch (err) {
+      displayNotification({
+        title: "Error!",
+        message: err?.message,
+        color: "red",
+      });
+      console.log(err);
+    }
+  };
 
   return (
     <>
@@ -39,7 +73,9 @@ export const NoteCard = (props: INoteCard) => {
           marginTop: 100,
         }}
       >
-        <form onSubmit={form.onSubmit((values) => console.log(values))}>
+        <form
+          onSubmit={form.onSubmit((values) => handleFormSubmission(values))}
+        >
           <Paper shadow="sm" p="sm" withBorder>
             <Input
               variant="unstyled"
