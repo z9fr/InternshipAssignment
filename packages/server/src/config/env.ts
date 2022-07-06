@@ -13,8 +13,8 @@ export default {
   mongo: {
     uri:
       process.env.NODE_ENV === "test"
-        ? "mongodb://127.0.0.1:27017/tests"
-        : "mongodb://127.0.0.1:27017/appdb",
+        ? `${process.env.MONGODB_URL}/tests`
+        : `${process.env.MONGODB_URL}/appdb`,
   },
   isDev: true,
   host: "http://localhost:3000/",

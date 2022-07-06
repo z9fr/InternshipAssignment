@@ -8,6 +8,7 @@
   "private": true,
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "start": "ts-node-dev --respawn --transpile-only src/index.ts",
     "test": "jest",
     "createAdmin": "ts-node --transpile-only src/createAdmin.ts"
   },

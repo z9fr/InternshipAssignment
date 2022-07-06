@@ -1,0 +1,24 @@
+version: '3'
+services:
+  surge-assignment-db:
+    image: mongo
+    container_name: "surge-assignment-db"
+    ports:
+      - 27017:27017
+    networks:
+      - fullstack
+  surge-assignment-app:
+    build: .
+    container_name: "surge-assignment-app"
+    restart: always
+    ports:
+      - 3000:3000
+      - 4001:4001
+    environment:
+      - MONGODB_URL=mongodb://surge-assignment-db:27017
+    networks:
+      - fullstack
+
+networks:
+  fullstack:
+    driver: bridge
