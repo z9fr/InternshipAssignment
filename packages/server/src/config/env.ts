@@ -1,14 +1,13 @@
 import path from "path";
+import { v4 } from "uuid";
 
 // import .env variables
 require("dotenv-safe").config({
   path: path.join(__dirname, "../../.env"),
 });
-/*
-      process.env.NODE_ENV === "test"
-        ? process.env.MONGO_URI_TESTS
-        : process.env.MONGO_URI,
-        */
+
+const SECRET = v4();
+
 export default {
   mongo: {
     uri:
@@ -16,9 +15,9 @@ export default {
         ? `${process.env.MONGODB_URL}/tests`
         : `${process.env.MONGODB_URL}/appdb`,
   },
-  isDev: true,
+  isDev: process.env.NODE_ENV === "dev",
   host: "http://localhost:3000/",
-  ACCESS_TOKEN_SECRET: "secret",
+  ACCESS_TOKEN_SECRET: process.env.SECRET ? process.env.SECRET : SECRET,
   roles: {
     ADMIN: "admin",
     USER: "user",

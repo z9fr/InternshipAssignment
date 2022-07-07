@@ -16,6 +16,8 @@ services:
       - 4001:4001
     environment:
       - MONGODB_URL=mongodb://surge-assignment-db:27017
+      - NODE_ENV=prod
+      - FRONTEND_HOST=http://localhost:3000/
     networks:
       - fullstack
 
