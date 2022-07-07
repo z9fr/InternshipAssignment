@@ -11,8 +11,15 @@ import env from "../../../config/env";
 
 const router = express.Router();
 
-router.route("/create").post(createUser);
 router.route("/login").post(userAuth);
+
+router.post(
+  "/create",
+  (req: Request, res: Response, next: NextFunction) => {
+    isAuth(req, res, next, env.roles.ADMIN);
+  },
+  createUser
+);
 
 router.get(
   "/all",
