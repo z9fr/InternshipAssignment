@@ -1,6 +1,6 @@
 # Software Engineering - Internship Assignment
 
-Software Engineering - Internship Assignment surge
+Software Engineering - Internship Assignment 
 
 ## Running the Application
 
@@ -46,8 +46,8 @@ export SECRET=secret
 
 API documentation can be found on [here](https://documenter.getpostman.com/view/15892759/UzJJucyC#2ad25e08-7d99-4841-a68e-4d5d39438308).
 
-### Links
+### Project
 
-- Web : [localhost:3000](http://localhost:3000)
-- API : [localhost:4001](http://localhost:4001)
-- Docs : [here](https://documenter.getpostman.com/view/15892759/UzJJucyC#2ad25e08-7d99-4841-a68e-4d5d39438308).
+- common - common code for both frontend and server mostly types
+- web - frontend application
+- server - rest api
