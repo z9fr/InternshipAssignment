@@ -26,10 +26,21 @@ sudo docker run --name surgedb -d -p 27017:27017 mongo
 environment variables
 
 ```bash
-export MONGODB_URL=mongodb://127.0.0.1:27017/
+export MONGODB_URL=mongodb://127.0.0.1:27017
 export NODE_ENV=dev
 export FRONTEND_HOST=http://localhost:3000/
 ```
+
+### Secrets
+
+JWT secret can be set by using a env variable, also in case where this variable is not present the application
+will generate one 
+
+```bash
+export SECRET=secret
+```
+
+---
 
 ### Docs
 
@@ -39,4 +50,4 @@ API documentation can be found on [here](https://documenter.getpostman.com/view/
 
 - Web : [localhost:3000](http://localhost:3000)
 - API : [localhost:4001](http://localhost:4001)
-- DOC : [here](https://documenter.getpostman.com/view/15892759/UzJJucyC#2ad25e08-7d99-4841-a68e-4d5d39438308).
+- Docs : [here](https://documenter.getpostman.com/view/15892759/UzJJucyC#2ad25e08-7d99-4841-a68e-4d5d39438308).
