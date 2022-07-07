@@ -34,3 +34,9 @@ export FRONTEND_HOST=http://localhost:3000/
 ### Docs
 
 API documentation can be found on [here](https://documenter.getpostman.com/view/15892759/UzJJucyC#2ad25e08-7d99-4841-a68e-4d5d39438308).
+
+### Links
+
+Web : [localhost:3000](http://localhost:3000)
+API : [localhost:4001](http://localhost:4001)
+DOC : [here](https://documenter.getpostman.com/view/15892759/UzJJucyC#2ad25e08-7d99-4841-a68e-4d5d39438308).
